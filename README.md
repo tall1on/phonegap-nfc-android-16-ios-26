@@ -1,6 +1,10 @@
 PhoneGap NFC Plugin
 ==========================
 
+Fork of https://github.com/escully27/phonegap-nfc-android-12.
+
+Contains fixes for Android 12 and iOS 17 changes and should be compatible with latest iOS 26 and Android 16.
+
 ### Capacitor 8 (Android 16, iOS 26 supported)
 
     $ npm install github:tall1on/phonegap-nfc-android-16-ios-26#1.2.2
