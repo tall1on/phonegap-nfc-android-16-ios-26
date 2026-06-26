@@ -1,4 +1,4 @@
-﻿PhoneGap NFC Plugin
+PhoneGap NFC Plugin
 ==========================
 
 ### Capacitor 8 (Android 16, iOS 26 supported)
