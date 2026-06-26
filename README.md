@@ -1,5 +1,13 @@
-PhoneGap NFC Plugin
+﻿PhoneGap NFC Plugin
 ==========================
+
+### Capacitor 8 (Android 16, iOS 26 supported)
+
+    $ npm install github:tall1on/phonegap-nfc-android-16-ios-26#1.2.2
+
+### Old version
+
+    $ npm install github:tall1on/phonegap-nfc-android-16-ios-26#1.2.1
 
 The NFC plugin allows you to read and write  NFC tags. You can also beam to, and receive from, other NFC enabled devices.
 
@@ -15,11 +23,7 @@ This plugin uses NDEF (NFC Data Exchange Format) for maximum compatibilty betwee
 Supported Platforms
 -------------------
 * Android
-* [iOS 11](#ios-notes)
-* Windows (includes Windows Phone 8.1, Windows 8.1, Windows 10)
-* BlackBerry 10
-* Windows Phone 8
-* BlackBerry 7
+* [iOS 11+](#ios-notes)
 
 ## Contents
 
@@ -30,7 +34,6 @@ Supported Platforms
   - [NdefRecord](#ndefrecord)
 * [Events](#events)
 * [Platform Differences](#platform-differences)
-* [BlackBerry 10 Invoke Target](#blackberry-10-invoke-target)
 * [Launching Application when Scanning a Tag](#launching-your-android-application-when-scanning-a-tag)
 * [Testing](#testing)
 * [Sample Projects](#sample-projects)
@@ -48,19 +51,7 @@ Supported Platforms
 
     $ phonegap plugin add phonegap-nfc
 
-### PhoneGap Build
-
-Edit config.xml to install the plugin for [PhoneGap Build](http://build.phonegap.com).
-
-    <preference name="phonegap-version" value="cli-9.0.0" />
-    <plugin name="phonegap-nfc" source="npm" />
-
-
-Windows Phone 8.1 should use the **windows** platform. The Silverlight based Windows Phone 8 code is no longer being maintained.
-
-BlackBerry 7 support is only available for Cordova 2.x. For applications targeting BlackBerry 7, you may need to use an older version of phonegap-nfc.
-
-See [Getting Started](https://github.com/chariotsolutions/phonegap-nfc/blob/master/doc/GettingStartedCLI.md) and [Getting Started BlackBerry 10](https://github.com/chariotsolutions/phonegap-nfc/blob/master/doc/GettingStartedBlackberry10.md)for more details.
+See [Getting Started](https://github.com/tall1on/phonegap-nfc-android-16-ios-26/blob/master/doc/GettingStartedCLI.md) for more details.
 
 ## iOS Notes
 
@@ -127,8 +118,6 @@ Function `nfc.addNdefListener` registers the callback for ndef events.
 
 A ndef event is fired when a NDEF tag is read.
 
-For BlackBerry 10, you must configure the type of tags your application will read with an [invoke-target in config.xml](#blackberry-10-invoke-target).
-
 On Android registered [mimeTypeListeners](#nfcaddmimetypelistener) takes precedence over this more generic NDEF listener.
 
 On iOS you must call [beingSession](#nfcbeginsession) before scanning a tag.
@@ -137,10 +126,6 @@ On iOS you must call [beingSession](#nfcbeginsession) before scanning a tag.
 
 - Android
 - iOS
-- Windows
-- BlackBerry 7
-- BlackBerry 10
-- Windows Phone 8
 
 ## nfc.removeNdefListener
 
@@ -160,8 +145,6 @@ Removing listeners is not recommended. Instead, consider that your callback can 
 
 - Android
 - iOS
-- Windows
-- BlackBerry 7
 
 ## nfc.addTagDiscoveredListener
 
@@ -184,10 +167,6 @@ This event occurs when any tag is detected by the phone.
 ### Supported Platforms
 
 - Android
-- Windows
-- BlackBerry 7
-
-Note that Windows Phones need the newere NXP PN427 chipset to read non-NDEF tags. That tag will be read, but no tag meta-data is available.
 
 ## nfc.removeTagDiscoveredListener
 
@@ -206,8 +185,6 @@ Removing listeners is not recommended. Instead, consider that your callback can 
 ### Supported Platforms
 
 - Android
-- Windows
-- BlackBerry 7
 
 ## nfc.addMimeTypeListener
 
@@ -238,7 +215,6 @@ On Android, MIME types for filtering should always be lower case. (See [IntentFi
 ### Supported Platforms
 
 - Android
-- BlackBerry 7
 
 ## nfc.removeMimeTypeListener
 
@@ -258,7 +234,6 @@ Removing listeners is not recommended. Instead, consider that your callback can 
 ### Supported Platforms
 
 - Android
-- BlackBerry 7
 
 ## nfc.addNdefFormatableListener
 
@@ -290,7 +265,7 @@ A NDEF Message is an array of one or more NDEF Records
 
     var message = [
         ndef.textRecord("hello, world"),
-        ndef.uriRecord("http://github.com/chariotsolutions/phonegap-nfc")
+        ndef.uriRecord("http://github.com/tall1on/phonegap-nfc-android-16-ios-26")
     ];
 
     nfc.write(message, [onSuccess], [onFailure]);
@@ -308,10 +283,6 @@ Function `nfc.write` writes an NdefMessage to a NFC tag.
 On **Android** this method *must* be called from within an NDEF Event Handler.
 
 On **iOS** this method can be called outside the NDEF Event Handler, it will start a new scanning session. Optionally you can reuse the read session to write data. See example below.
-
-On **Windows** this method *may* be called from within the NDEF Event Handler.
-
-On **Windows Phone 8.1** this method should be called outside the NDEF Event Handler, otherwise Windows tries to read the tag contents as you are writing to the tag.
 
 ### Examples
 
@@ -334,7 +305,6 @@ On Android, write must be called inside an event handler
         );
 
     nfc.addNdefListener(onNfc);
-
 
 #### iOS - Simple
 
@@ -379,9 +349,6 @@ On iOS you can optionally write to NFC tag using the read session
 
 - Android
 - iOS
-- Windows
-- BlackBerry 7
-- Windows Phone 8
 
 ## nfc.makeReadOnly
 
@@ -453,16 +420,10 @@ Function `nfc.share` writes an NdefMessage via peer-to-peer.  This should appear
 ### Supported Platforms
 
 - Android
-- Windows
-- BlackBerry 7
-- BlackBerry 10
-- Windows Phone 8
 
 ### Platform differences
 
     Android - shares message until unshare is called
-    Blackberry 10 - shares the message one time or until unshare is called
-    Windows Phone 8 - must be called from within a NFC event handler like nfc.write
 
 ## nfc.unshare
 
@@ -482,9 +443,6 @@ Function `nfc.unshare` stops sharing data via peer-to-peer.
 ### Supported Platforms
 
 - Android
-- Windows
-- BlackBerry 7
-- BlackBerry 10
 
 ## nfc.erase
 
@@ -506,7 +464,6 @@ This method *must* be called from within an NDEF Event Handler.
 ### Supported Platforms
 
 - Android
-- BlackBerry 7
 
 ## nfc.handover
 
@@ -515,14 +472,12 @@ Send a file to another device via NFC handover.
     var uri = "content://media/external/audio/media/175";
     nfc.handover(uri, [onSuccess], [onFailure]);
 
-
     var uris = [
         "content://media/external/audio/media/175",
         "content://media/external/audio/media/176",
         "content://media/external/audio/media/348"
     ];
     nfc.handover(uris, [onSuccess], [onFailure]);
-
 
 ### Parameters
 
@@ -581,8 +536,6 @@ Function `showSettings` opens the NFC settings for the operating system.
 ### Supported Platforms
 
 - Android
-- Windows
-- BlackBerry 10
 
 ## nfc.enabled
 
@@ -605,13 +558,10 @@ The reason will be **NO_NFC** if the device doesn't support NFC and **NFC_DISABL
 
 Note: that on Android the NFC status is checked before every API call **NO_NFC** or **NFC_DISABLED** can be returned in **any** failure function.
 
-Windows will return **NO_NFC_OR_NFC_DISABLED** when NFC is not present or disabled. If the user disabled NFC after the application started, Windows may return **NFC_DISABLED**. Windows checks the NFC status before most API calls, but there are some cases when the NFC state can not be determined.
-
 ### Supported Platforms
 
 - Android
 - iOS
-- Windows
 
 ## nfc.beginSession
 
@@ -695,7 +645,6 @@ Function `scanNdef` starts the [NFCNDEFReaderSession](https://developer.apple.co
         console.log(err);
     }
     
-
 ### Supported Platforms
 
 - iOS
@@ -742,11 +691,9 @@ Use [scanNdef](#nfcscanndef) for reading NFC tags on iOS unless you need to get 
         console.log(err);
     }
     
-
 ### Supported Platforms
 
 - iOS
-
 
 ## nfc.cancelScan
 
@@ -772,7 +719,6 @@ Function `cancelScan` stops the [NFCReaderSession](https://developer.apple.com/d
 ### Supported Platforms
 
 - iOS
-
 
 # Reader Mode Functions
 
@@ -804,7 +750,6 @@ In reader mode, when a NFC tags is read, the results are returned to read callba
 Foreground dispatching and peer-to-peer functions are disabled when reader mode is enabled.
 
 The flags control which tags are scanned. One benefit to reader mode, is the system sounds can be disabled when a NFC tag is scanned by adding the nfc.FLAG_READER_NO_PLATFORM_SOUNDS flag. See Android's [NfcAdapter.enableReaderMode()](https://developer.android.com/reference/android/nfc/NfcAdapter#enableReaderMode(android.app.Activity,%20android.nfc.NfcAdapter.ReaderCallback,%20int,%20android.os.Bundle)) documentation for more info on the flags.
-
 
 ### Parameters
 
@@ -849,7 +794,6 @@ Disable NFC reader mode.
 ### Supported Platforms
 
 - Android
-
 
 # Tag Technology Functions
 
@@ -1062,7 +1006,7 @@ See `ndef.record`, `ndef.textRecord`, `ndef.mimeMediaRecord`, and `ndef.uriRecor
 
 The Ndef object has functions to convert some data types to and from byte arrays.
 
-See the [phonegap-nfc.js](https://github.com/chariotsolutions/phonegap-nfc/blob/master/www/phonegap-nfc.js) source for more documentation.
+See the [phonegap-nfc.js](https://github.com/tall1on/phonegap-nfc-android-16-ios-26/blob/master/www/phonegap-nfc.js) source for more documentation.
 
 # Events
 
@@ -1084,11 +1028,7 @@ Events are fired when NFC tags are read.  Listeners are added by registering cal
 
 The tag contents are platform dependent.
 
-`id` and `techTypes` may be included when scanning a tag on Android.  `serialNumber` may be included on BlackBerry 7.
-
 `id` and `serialNumber` are different names for the same value.  `id` is typically displayed as a hex string `nfc.bytesToHexString(tag.id)`.
-
-Windows, Windows Phone 8, and BlackBerry 10 read the NDEF information from a tag, but do not have access to the tag id or other meta data like capacity, read-only status or tag technologies.
 
 Assuming the following NDEF message is written to a tag, it will produce the following events when read.
 
@@ -1116,8 +1056,6 @@ Assuming the following NDEF message is written to a tag, it will produce the fol
         }
     }
 
-#### Sample Event on BlackBerry 7
-
     {
         type: 'ndef',
         tag: {
@@ -1137,8 +1075,6 @@ Assuming the following NDEF message is written to a tag, it will produce the fol
         }
     }
 
-#### Sample Event on Windows, BlackBerry 10, or Windows Phone 8
-
     {
         type: 'ndef',
         tag: {
@@ -1153,23 +1089,15 @@ Assuming the following NDEF message is written to a tag, it will produce the fol
 
 ## Getting Details about Events
 
-The raw contents of the scanned tags are written to the log before the event is fired.  Use `adb logcat` on Android and Event Log (hold alt + lglg) on BlackBerry.
-
 You can also log the tag contents in your event handlers.  `console.log(JSON.stringify(nfcEvent.tag))`  Note that you want to stringify the tag not the event to avoid a circular reference.
 
 # Platform Differences
 
 ## Non-NDEF Tags
 
-Only Android and BlackBerry 7 can read data from non-NDEF NFC tags. Newer Windows Phones with NXP PN427 chipset can read non-NDEF tags, but can not get any tag meta data.
-
 ## Mifare Classic Tags
 
-BlackBerry 7, BlackBerry 10 and many newer Android phones will not read Mifare Classic tags.  Mifare Ultralight tags will work since they are NFC Forum Type 2 tags. Newer Windows 8.1 phones (Lumia 640) can read Mifare Classic tags.
-
 ## Tag Id and Meta Data
-
-Windows Phone 8, BlackBerry 10, and Windows read the NDEF information from a tag, but do not have access to the tag id or other meta data like capacity, read-only status or tag technologies.
 
 ## Multiple Listeners
 
@@ -1177,17 +1105,9 @@ Multiple listeners can be registered in JavaScript. e.g. addNdefListener, addTag
 
 On Android, only the most specific event will fire.  If a Mime Media Tag is scanned, only the addMimeTypeListener callback is called and not the callback defined in addNdefListener. You can use the same event handler for multiple listeners.
 
-For Windows, this plugin mimics the Android behavior. If an ndef event is fired, a tag event will not be fired. You should receive one event per tag.
-
-On BlackBerry 7, all the events fire if a Mime Media Tag is scanned.
-
 ## addTagDiscoveredListener
 
 On Android, addTagDiscoveredListener scans non-NDEF tags and NDEF tags. The tag event does NOT contain an ndefMessage even if there are NDEF messages on the tag.  Use addNdefListener or addMimeTypeListener to get the NDEF information.
-
-Windows can scan non-NDEF (unformatted) tags using addTagDiscoveredListener. The tag event will not include any data.
-
-On BlackBerry 7, addTagDiscoveredListener does NOT scan non-NDEF tags.  Webworks returns the ndefMessage in the event.
 
 ### Non-NDEF tag scanned with addTagDiscoveredListener on *Android*
 
@@ -1199,7 +1119,6 @@ On BlackBerry 7, addTagDiscoveredListener does NOT scan non-NDEF tags.  Webworks
         }
     }
 
-
 ### NDEF tag scanned with addTagDiscoveredListener on *Android*
 
     {
@@ -1209,60 +1128,6 @@ On BlackBerry 7, addTagDiscoveredListener does NOT scan non-NDEF tags.  Webworks
             "techTypes": ["android.nfc.tech.IsoDep", "android.nfc.tech.NfcA", "android.nfc.tech.Ndef"]
         }
     }
-
-### Non-NDEF tag scanned with addTagDiscoveredListener on *Windows*
-
-    {
-        type: 'tag',
-        tag: {
-        }
-    }
-
-# BlackBerry 10 Invoke Target
-
-This plugin uses the [BlackBerry Invocation Framework](http://developer.blackberry.com/native/documentation/cascades/device_platform/invocation/receiving_invocation.html) to read NFC tags on BlackBerry 10. This means that you need to register an invoke target in the config.xml.
-
-If your project supports multiple platforms, copy www/config.xml to merges/config.xml and add a `rim:invoke-target` tag. The invoke-target determines which tags your app will scan when it is running. If your application is not running, BlackBerry will launch it when a matching tag is scanned.
-
-This sample configuration attempts to open any NDEF tag.
-
-    <rim:invoke-target id="your.unique.id.here">
-        <type>APPLICATION</type>
-        <filter>
-            <action>bb.action.OPEN</action>
-            <mime-type>application/vnd.rim.nfc.ndef</mime-type>
-            <!-- any TNF Empty(0), Well Known(1), MIME Media(2), Absolute URI(3), External(4) -->
-            <property var="uris" value="ndef://0,ndef://1,ndef://2,ndef://3,ndef://4" />
-        </filter>
-    </rim:invoke-target>
-
-You can configure you application to handle only certain tags.
-
-For example to scan only MIME Media tags of type "text/pg" use
-
-    <rim:invoke-target id="your.unique.id.here">
-        <type>APPLICATION</type>
-        <filter>
-            <action>bb.action.OPEN</action>
-            <mime-type>application/vnd.rim.nfc.ndef</mime-type>
-            <!-- TNF MIME Media(2) with type "text/pg" -->
-            <property var="uris" value="ndef://2/text/pg" />
-        </filter>
-    </rim:invoke-target>
-
-Or to scan only Plain Text tags use
-
-    <rim:invoke-target id="your.unique.id.here">
-        <type>APPLICATION</type>
-        <filter>
-            <action>bb.action.OPEN</action>
-            <mime-type>application/vnd.rim.nfc.ndef</mime-type>
-            <!-- TNF Well Known(1), RTD T -->
-            <property var="uris" value="ndef://1/T" />
-        </filter>
-    </rim:invoke-target>
-
-See the [BlackBerry documentation](http://developer.blackberry.com/native/documentation/cascades/device_comm/nfc/receiving_content.html) for more info.
 
 # Launching your Android Application when Scanning a Tag
 
@@ -1287,7 +1152,7 @@ Tests require the [Cordova Plugin Test Framework](https://github.com/apache/cord
 
 Create a new project
 
-    git clone https://github.com/chariotsolutions/phonegap-nfc
+    git clone https://github.com/tall1on/phonegap-nfc-android-16-ios-26
     cordova create nfc-test com.example.nfc.test NfcTest
     cd nfc-test
     cordova platform add android
@@ -1302,7 +1167,6 @@ Change the start page in `config.xml`
 Run the app on your phone
 
     cordova run
-
 
 Sample Projects
 ================

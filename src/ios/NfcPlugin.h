@@ -9,7 +9,6 @@
 
 #import <Cordova/CDV.h>
 #import <CoreNFC/CoreNFC.h>
-#import <WebKit/WebKit.h>
 
 @interface NfcPlugin : CDVPlugin <NFCNDEFReaderSessionDelegate, NFCTagReaderSessionDelegate> {
 }

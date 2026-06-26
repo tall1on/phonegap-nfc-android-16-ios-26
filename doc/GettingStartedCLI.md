@@ -1,10 +1,10 @@
 ## Quickstart for PhoneGap NFC - Cordova CLI
 
-These instructions use [Cordova](http://cordova.apache.org/) to generate a default PhoneGap app and modify it to read NFC tags. BlackBerry users should refer to [Getting Started with BlackBerry 10](https://github.com/chariotsolutions/phonegap-nfc/blob/master/doc/GettingStartedBlackBerry10.md).
+These instructions use [Cordova](http://cordova.apache.org/) to generate a default PhoneGap app and modify it to read NFC tags.
 
 ### Cordova Command Line Interface (CLI)
 
-The Cordova Command Line Interface [cordova-cli](https://npmjs.org/package/cordova) can be used to create, build and run multi-platform Cordova projects. Cordova CLI requires [node.js](http://nodejs.org), [git](http://git-scm.com/) and the SDK tools for your target platform (Android, BlackBerry10 or Windows Phone 8.)
+The Cordova Command Line Interface [cordova-cli](https://npmjs.org/package/cordova) can be used to create, build and run multi-platform Cordova projects. Cordova CLI requires [node.js](http://nodejs.org), [git](http://git-scm.com/) and the SDK tools for your target platform (Android or iOS).
 
     $ npm install cordova -g
 

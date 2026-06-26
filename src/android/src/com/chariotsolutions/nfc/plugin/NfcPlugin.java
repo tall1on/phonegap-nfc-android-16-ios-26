@@ -29,6 +29,7 @@ import android.nfc.TagLostException;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.nfc.tech.TagTechnology;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -298,7 +299,7 @@ public class NfcPlugin extends CordovaPlugin {
 
     // Cheating and writing an empty record. We may actually be able to erase some tag types.
     private void eraseTag(CallbackContext callbackContext) {
-        Tag tag = savedIntent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        Tag tag = getTagExtra(savedIntent);
         NdefRecord[] records = {
                 new NdefRecord(NdefRecord.TNF_EMPTY, new byte[0], new byte[0], new byte[0])
         };
@@ -310,7 +311,7 @@ public class NfcPlugin extends CordovaPlugin {
             callbackContext.error("Failed to write tag, received null intent");
         }
 
-        Tag tag = savedIntent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        Tag tag = getTagExtra(savedIntent);
         NdefRecord[] records = Util.jsonToNdefRecords(data.getString(0));
         writeNdefMessage(new NdefMessage(records), tag, callbackContext);
     }
@@ -363,7 +364,7 @@ public class NfcPlugin extends CordovaPlugin {
             return;
         }
 
-        final Tag tag = savedIntent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        final Tag tag = getTagExtra(savedIntent);
         if (tag == null) {
             callbackContext.error("Failed to make tag read only, tag is null");
             return;
@@ -425,7 +426,10 @@ public class NfcPlugin extends CordovaPlugin {
             Activity activity = getActivity();
             Intent intent = new Intent(activity, activity.getClass());
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            pendingIntent = PendingIntent.getActivity(activity, 0, intent, PendingIntent.FLAG_MUTABLE);
+            int flags = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                    ? PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
+                    : PendingIntent.FLAG_UPDATE_CURRENT;
+            pendingIntent = PendingIntent.getActivity(activity, 0, intent, flags);
         }
     }
 
@@ -558,6 +562,22 @@ public class NfcPlugin extends CordovaPlugin {
         return techLists.toArray(new String[0][0]);
     }
 
+    @SuppressWarnings("deprecation")
+    private Tag getTagExtra(Intent intent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return intent.getParcelableExtra(NfcAdapter.EXTRA_TAG, Tag.class);
+        }
+        return intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+    }
+
+    @SuppressWarnings("deprecation")
+    private Parcelable[] getNdefMessagesExtra(Intent intent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES, Parcelable.class);
+        }
+        return intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+    }
+
     private void parseMessage() {
         cordova.getThreadPool().execute(() -> {
             Log.d(TAG, "parseMessage " + getIntent());
@@ -568,8 +588,8 @@ public class NfcPlugin extends CordovaPlugin {
                 return;
             }
 
-            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            Parcelable[] messages = intent.getParcelableArrayExtra((NfcAdapter.EXTRA_NDEF_MESSAGES));
+            Tag tag = getTagExtra(intent);
+            Parcelable[] messages = getNdefMessagesExtra(intent);
 
             if (action.equals(NfcAdapter.ACTION_NDEF_DISCOVERED)) {
                 Ndef ndef = Ndef.get(tag);
@@ -715,9 +735,9 @@ public class NfcPlugin extends CordovaPlugin {
         this.cordova.getThreadPool().execute(() -> {
             try {
 
-                Tag tag = getIntent().getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                Tag tag = getTagExtra(getIntent());
                 if (tag == null && savedIntent != null) {
-                    tag = savedIntent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                    tag = getTagExtra(savedIntent);
                 }
 
                 if (tag == null) {

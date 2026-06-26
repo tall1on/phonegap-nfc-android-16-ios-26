@@ -1,3 +1,10 @@
+= 1.2.2 =
+Capacitor 8 compatibility
+Android SDK 36, minSdk 24
+iOS deployment target 15.0
+Update repository URL
+Remove BlackBerry, Windows, WebWorks, and Windows Phone 8 support (Android and iOS only)
+
 = 1.2.0 =
 iOS allow tag read and write in same session #419
 
